@@ -1,43 +1,26 @@
-name: CI/CD Pipeline
+name: CI/CD FastAPI
 
 on:
   push:
-    branches: [ "main" ]   
+    branches: [ "main" ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      # Checkout do código
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      # Configuração do Python
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: "3.9"
 
-      # Instalação do Poetry
-      - name: Install Poetry
-        run: |
-          curl -sSL https://install.python-poetry.org | python3 -
-          export PATH="$HOME/.local/bin:$PATH"
-
-      # Cache para otimizar dependências
-      - name: Cache dependencies
-        uses: actions/cache@v3
-        with:
-          path: ~/.cache/pypoetry
-          key: ${{ runner.os }}-poetry-${{ hashFiles('**/poetry.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-poetry-
-
-      # Instalação das dependências
       - name: Install dependencies
-        run: poetry install --no-root --no-interaction
+        run: |
+          pip install poetry
+          poetry install --no-root --no-interaction
 
-      # Execução dos testes
       - name: Run tests
         run: poetry run pytest
