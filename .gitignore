@@ -1,0 +1,23 @@
+# Ambientes Virtuais (Venv)
+venv/
+.venv/
+env/
+ENV/
+
+# Caches do Python e do compilador
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Configurações do VS Code (opcional, mas recomendado)
+.vscode/
+
+# Caches de ferramentas de testes (Pytest)
+.__pycache__/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Arquivos de ambiente e segredos 
+.env
+.env.*
