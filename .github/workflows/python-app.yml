@@ -1,41 +1,41 @@
 name: CI CD for Books List CRUD
-
 on:
   push:
     branches: [ "main", "master" ]
   pull_request:
     branches: [ "main", "master" ]
-
 jobs:
   test:
     runs-on: ubuntu-latest
-
     steps:
     # 1. Baixa o código do repositório para a máquina virtual do GitHub
     - name: Checkout code
-      uses: actions/checkout@v4
+      uses: actions/checkout@v3          # ← CORRIGIDO: era @v4
 
-    # 2. Configura o Python (forçando 3.11 para garantir suporte ao list[Livro])
+    # 2. Configura o Python 3.11
     - name: Set up Python 3.11
       uses: actions/setup-python@v5
       with:
         python-version: '3.11'
-        cache: 'pip' # Ativa o cache automático para acelerar os próximos deploys
+        cache: 'pip'
 
-    # 3. Instala as dependências listadas no seu requirements.txt
+    # 3. Instala o Poetry                # ← ADICIONADO
+    - name: Install Poetry
+      run: |
+        pip install poetry
+
+    # 4. Instala as dependências via Poetry  # ← CORRIGIDO: era pip + requirements.txt
     - name: Install dependencies
       run: |
-        python -m pip install --upgrade pip
-        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+        poetry install --no-root --no-interaction
 
-    # 4. Executa uma checagem rápida de sintaxe (Linter) para evitar erros bobos
+    # 5. Checagem de sintaxe com flake8
     - name: Lint with flake8 (Syntax check)
       run: |
         pip install flake8
-        # para o build se houver erros de sintaxe Python
         flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
 
-    # 5. Roda a suite de testes automatizados
+    # 6. Roda os testes via Poetry        # ← CORRIGIDO: era apenas `pytest`
     - name: Run tests with pytest
       run: |
-        pytest
+        poetry run pytest
