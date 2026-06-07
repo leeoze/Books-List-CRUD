@@ -39,3 +39,14 @@ jobs:
     - name: Run tests with pytest
       run: |
         poetry run pytest
+    
+     # ── ETAPA DE BUILD DOCKER ──────────────────────────────────────────────────
+
+    - name: Build Docker image
+      run: |
+        docker build -t fastapi-app:latest .
+
+    - name: Run Docker container (smoke test)
+      run: |
+        docker run --rm fastapi-app:latest echo "Container iniciado com sucesso"
+
